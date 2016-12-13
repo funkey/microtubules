@@ -8,8 +8,8 @@ class L1Graph:
         self.edges    = []
 
         # node properties
-        self.orientations = {}
-        self.positions    = {}
+        self.orientations = { n: (0,0,0) for n in range(num_nodes) }
+        self.positions    = { n: (0,0,0) for n in range(num_nodes) }
 
     def add_edge(self, u, v):
 
@@ -33,6 +33,7 @@ class L1Graph:
 
         id = len(self.edges)
         self.edges.append((u, v))
+        self.num_edges += 1
         return id
 
     def __add_incident(self, u, v):
