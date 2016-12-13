@@ -4,6 +4,16 @@ from l1_graph import L1Graph
 from l2_graph import L2Graph
 from graph_converter import l1_to_l2
 from solver import L2GraphSolver
+from io import write_itk_graph
+
+def set_random_positions(graph):
+
+    for n in range(graph.num_nodes):
+        graph.positions[n] = (
+                int(random.random()*100),
+                int(random.random()*100),
+                int(random.random()*100)
+        )
 
 def create_l1_graphs():
 
@@ -30,7 +40,12 @@ def create_l1_graphs():
         if u != v:
             randomized.add_edge(u, v)
 
-    return [chain, full, star, single_node, randomized]
+    graphs = { 'chain': chain, 'full': full, 'star': star, 'single_node': single_node, 'randomized': randomized }
+
+    for (_, graph) in graphs.iteritems():
+        set_random_positions(graph)
+
+    return graphs
 
 if __name__ == "__main__":
 
@@ -38,7 +53,7 @@ if __name__ == "__main__":
 
     print "Creating L1 graphs..."
 
-    for l1_graph in create_l1_graphs():
+    for (name, l1_graph) in create_l1_graphs().iteritems():
 
         print "Converting to L2 graph..."
         (l2_graph, l2_node_to_l1_edges) = l1_to_l2(l1_graph)
@@ -65,7 +80,15 @@ if __name__ == "__main__":
                 sum += 1
         print "numer of non-zeros in solution: " + str(sum)
 
-        print "Selected L1 edges:"
+        selected_edges = set()
         for n in l2_node_to_l1_edges.keys():
             if solution[n] > 0.5:
-                print l2_node_to_l1_edges[n]
+                for e in l2_node_to_l1_edges[n]:
+                    if e != L2Graph.START_EDGE:
+                        selected_edges.add(e)
+
+        print "Selected L1 edges:"
+        print selected_edges
+
+        write_itk_graph(l1_graph, name + '.itk', id=1)
+        write_itk_graph(l1_graph, name + '_solution.itk', selected_edges, id=2)
