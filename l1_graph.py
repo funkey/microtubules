@@ -15,6 +15,7 @@ class L1Graph:
 
         self.__check_id(u)
         self.__check_id(v)
+        assert(u != v)
 
         e = self.__add_edge(u, v)
         self.__add_incident(u, e)
