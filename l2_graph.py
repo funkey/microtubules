@@ -1,42 +1,34 @@
 class L2Graph:
 
-    def __init__(self, num_ids):
+    START_EDGE = -1
 
-        self.num_ids = num_ids
+    def __init__(self, num_nodes):
 
-        self.costs = [0]*num_ids
+        self.num_nodes = num_nodes
 
-        # tuple of ids in conflict
+        self.costs = [0]*num_nodes
+
+        # tuple of nodes in conflict
         self.conflicts = []
 
-        # map from id to list of implied ids
-        self.implications = {}
+        # tuple of sets of nodes which should have same number of selections
+        self.equal_sum_constraints = []
 
-    def add_conflict(self, exclusive_ids):
+    def add_conflict(self, exclusive_nodes):
 
-        for n in exclusive_ids:
+        for n in exclusive_nodes:
             self.__check_id(n)
 
-        self.conflicts.append(exclusive_ids)
+        self.conflicts.append(exclusive_nodes)
 
-    def add_implication(self, source, targets):
-        '''Add targets (list of ids) as implications of source (single id).
+    def add_equal_sum_constraint(self, nodes1, nodes2):
+        '''Require that the number of selected nodes in nodes1 is equal to the 
+        number of selected nodes in nodes2.'''
 
-        This means that if source is selected, at least one of targets has to be 
-        selected as well. If multiple implications for one source are set, all 
-        of them have to be fulfilled.
-        '''
-
-        self.__check_id(source)
-        for n in targets:
+        for n in nodes1 + nodes2:
             self.__check_id(n)
 
-        #self.implications[source] -> [ [1,2,3], [4,5] ]
-        #                          -> (1 or 2 or 3) and (4 or 5)
-
-        if source not in self.implications:
-            self.implications[source] = []
-        self.implications[source].append(targets)
+        self.equal_sum_constraints.append((list(nodes1), list(nodes2)))
 
     def set_cost(self, n, cost):
 
@@ -50,6 +42,6 @@ class L2Graph:
 
     def __check_id(self, n):
 
-        if n >= self.num_ids:
-            raise RuntimeError("exceeded number of IDs (" + str(self.num_ids) + ")")
+        if n >= self.num_nodes:
+            raise RuntimeError("exceeded number of IDs (" + str(self.num_nodes) + ")")
 

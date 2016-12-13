@@ -3,6 +3,7 @@ class L1Graph:
     def __init__(self, num_nodes):
 
         self.num_nodes = num_nodes
+        self.num_edges = 0
         self.incident = {}
         self.edges    = []
 
@@ -41,6 +42,6 @@ class L1Graph:
 
     def __check_id(self, n):
 
-        if n >= self.num_ids:
-            raise RuntimeError("exceeded number of IDs (" + str(self.num_ids) + ")")
+        if n >= self.num_nodes:
+            raise RuntimeError("exceeded number of IDs (" + str(self.num_nodes) + ")")
 

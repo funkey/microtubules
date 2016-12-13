@@ -3,26 +3,26 @@ from l2_graph import L2Graph
 from solver import L2GraphSolver
 import random
 
-def create_random_graph(num_ids = 100, num_conflicts = 100, num_implications = 50):
+def create_random_graph(num_nodes = 100, num_conflicts = 100, num_implications = 50):
 
-    graph = L2Graph(num_ids)
+    graph = L2Graph(num_nodes)
 
-    for i in range(num_ids):
+    for i in range(num_nodes):
         graph.set_cost(i, 1.0 - 2*random.random())
 
     for i in range(num_conflicts):
 
-        u = random.randint(0, num_ids-1)
-        v = random.randint(0, num_ids-1)
+        u = random.randint(0, num_nodes-1)
+        v = random.randint(0, num_nodes-1)
 
         if u != v:
             graph.add_conflict([u, v])
 
     for i in range(num_implications):
 
-        source = random.randint(0, num_ids-1)
-        targets = [ random.randint(0, num_ids-1) for j in range(num_ids/10) ]
-        graph.add_implication(source, targets)
+        source = random.randint(0, num_nodes-1)
+        targets = [ random.randint(0, num_nodes-1) for j in range(num_nodes/10) ]
+        graph.add_equal_sum_constraint([source], targets)
 
     return graph
 
