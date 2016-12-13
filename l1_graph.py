@@ -4,7 +4,7 @@ class L1Graph:
 
         self.num_nodes = num_nodes
         self.num_edges = 0
-        self.incident = {}
+        self.incident = { n: [] for n in range(num_nodes) }
         self.edges    = []
 
         # node properties
@@ -36,8 +36,6 @@ class L1Graph:
 
     def __add_incident(self, u, v):
 
-        if u not in self.incident:
-            self.incident[u] = []
         self.incident[u].append(v)
 
     def __check_id(self, n):
